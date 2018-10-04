@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.demo.gener.mapper.test.UserMapper" >
+    <resultMap id="BaseResultMap" type="com.demo.gener.entity.test.UserEntity" >
+        <result column="id" property="id" jdbcType="BIGINT"/>
+        <result column="user_name" property="userName" jdbcType="VARCHAR"/>
+        <result column="age" property="age" jdbcType="INTEGER"/>
+        <result column="inserttime" property="inserttime" jdbcType="TIMESTAMP"/>
+        <result column="updatetime" property="updatetime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,user_name,age,inserttime,updatetime
+    </sql>
+
+    <sql id="Example_Where_Clause">
+        <where>
+            <foreach collection="ordCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" prefixOverrides="and" suffix=")">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                                      #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+
+    <sql id="Update_By_Example_Where_Clause">
+        <where>
+            <foreach collection="example.ordCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" prefixOverrides="and" suffix=")">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                                      #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+
+    <select id="getByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+        select
+            <include refid="Base_Column_List" />
+        from user
+        where
+        <trim suffixOverrides="AND" >
+            id = #{id,jdbcType=BIGINT} AND
+        </trim>
+    </select>
+
+    <select id="getByPrimaryIds" resultMap="BaseResultMap" parameterType="map">
+        select
+            <include refid="Base_Column_List" />
+        from user
+        where id in
+        <foreach collection="ids" item="item" index="index" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="getSingleByPredicate" resultMap="BaseResultMap" parameterType="com.demo.gener.entity.test.predicate.UserExample" >
+        select
+            <include refid="Base_Column_List" />
+        from user
+            <if test="_parameter!= null" >
+              <include refid="Example_Where_Clause" />
+            </if>
+            <if test="orderByClause!= null" >
+              order by${orderByClause}
+            </if>
+        limit 1
+     </select>
+
+    <select id="getAllByPredicate" resultMap="BaseResultMap" parameterType="com.demo.gener.entity.test.predicate.UserExample" >
+        select
+            <include refid="Base_Column_List" />
+        from user
+            <if test="_parameter!= null" >
+              <include refid="Example_Where_Clause" />
+            </if>
+        order by id desc
+    </select>
+
+    <select id="queryCount" resultType="java.lang.Integer" parameterType="com.demo.gener.entity.test.predicate.UserExample" >
+        select count(1) from user
+            <if test="_parameter!= null" >
+              <include refid="Example_Where_Clause" />
+            </if>
+    </select>
+
+    <!--配合com.github.pagehelper使用-->
+    <select id="getUserByPage" resultMap="BaseResultMap" parameterType="com.demo.gener.entity.test.predicate.UserExample" >
+        select
+            <include refid="Base_Column_List" />
+        from user
+            <if test="_parameter!= null" >
+              <include refid="Example_Where_Clause" />
+            </if>
+            <if test="orderByClause!= null" >
+              order by${orderByClause}
+            </if>
+    </select>
+
+    <update id="updateByPrimaryKey" parameterType="com.demo.gener.entity.test.UserEntity">
+        UPDATE user
+            <include refid="Update_Set_Condition" />
+        WHERE
+        id = #{record.id}
+    </update>
+
+    <update id="updateByPredicate" parameterType="map">
+        UPDATE user
+            <include refid="Update_Set_Condition" />
+            <if test="_parameter!= null" >
+              <include refid="Update_By_Example_Where_Clause" />
+            </if>
+    </update>
+
+    <insert id="insert" parameterType="com.demo.gener.entity.test.UserEntity"  useGeneratedKeys="true" keyProperty="id">
+        insert into user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userName!= null" >
+                user_name,
+            </if>
+            <if test="age!= null" >
+                age,
+            </if>
+            <if test="inserttime!= null" >
+                inserttime,
+            </if>
+            <if test="updatetime!= null" >
+                updatetime
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="userName!= null" >
+                #{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="age!= null" >
+                #{age,jdbcType=INTEGER},
+            </if>
+            <if test="inserttime!= null" >
+                #{inserttime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updatetime!= null" >
+                #{updatetime,jdbcType=TIMESTAMP}
+            </if>
+        </trim>
+    </insert>
+
+    <!--批量插入,传入List<User>集合 -->
+    <insert id="batchInsertUser" parameterType="java.util.List">
+        insert into user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            user_name,age,inserttime,updatetime
+        </trim>
+        values
+        <foreach collection ="list" item="item" index= "index" separator =",">
+            <trim prefix="(" suffix=")" suffixOverrides="," >
+                #{item.userName},#{item.age},#{item.inserttime},#{item.updatetime}
+            </trim>
+        </foreach>
+    </insert>
+
+    <sql id="Update_Set_Condition">
+        <set>
+            <if test="record.userName!= null" >
+                user_name = #{record.userName},
+            </if>
+            <if test="record.age!= null" >
+                age = #{record.age},
+            </if>
+        </set>
+    </sql>
+</mapper>

@@ -1,0 +1,20 @@
+info:
+  build:
+    name: mr-yang-demo
+    groupId: demo.gener.pro
+    artifactId: mr-yang-demo
+    version: 1.0-SNAPSHOT
+
+server:
+  port: 8081
+
+endpoints:
+  enabled: true
+  sensitive: false
+
+dataSource:
+  test:
+    url: jdbc:mysql://localhost:3306/test?useUnicode=true&characterEncoding=utf-8
+    driverClassName: com.mysql.jdbc.Driver
+    username: root
+    password: root

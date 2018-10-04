@@ -151,7 +151,8 @@ springboot_data_access_demo是根据自定义模版生成的基于mybatis+mysql�
     zhangSan.setUid(1L);
     zhangSan.setNickName("zhangsan");
     zhangSan.setUserDesc("a teacher");
-    list.add(zhangSan);
+    
+    userDetailsMapper.insert(zhangSan)
 ```
 输出示例
 ```
@@ -174,6 +175,8 @@ springboot_data_access_demo是根据自定义模版生成的基于mybatis+mysql�
     wangwu.setNickName("wangwu");
     wangwu.setUserDesc("a doctor");
     list.add(wangwu);
+    
+    userDetailsMapper.batchInsertUserDetails(list);
 ```
 输出示例
 ```
